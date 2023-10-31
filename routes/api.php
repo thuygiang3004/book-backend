@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Book;
+use App\Models\Listing;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -26,6 +27,18 @@ Route::get('/book/{id}', function ($id){
 Route::post('book', [\App\Http\Controllers\BookController::class, 'store']);
 Route::put('book/{id}', [\App\Http\Controllers\BookController::class, 'update']);
 Route::delete('book/{id}', [\App\Http\Controllers\BookController::class, 'destroy']);
+
+Route::get('/listings', function (){
+    return \App\Http\Resources\ListingResource::collection(Listing::all());
+});
+//
+Route::get('/listing/{id}', function ($id){
+    return new \App\Http\Resources\ListingResource(Listing::findOrFail($id));
+});
+
+Route::post('listing', [\App\Http\Controllers\ListingController::class, 'store']);
+Route::put('listing/{id}', [\App\Http\Controllers\ListingController::class, 'update']);
+Route::delete('listing/{id}', [\App\Http\Controllers\ListingController::class, 'destroy']);
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
