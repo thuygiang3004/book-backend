@@ -2,7 +2,6 @@
 
 use App\Models\Book;
 use App\Models\Listing;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -32,12 +31,12 @@ Route::get('/listing/{id}', function ($id){
     return new \App\Http\Resources\ListingResource(Listing::findOrFail($id));
 });
 
-Route::post('listing', [\App\Http\Controllers\ListingController::class, 'store']);
-Route::put('listing/{id}', [\App\Http\Controllers\ListingController::class, 'update']);
-Route::delete('listing/{id}', [\App\Http\Controllers\ListingController::class, 'destroy']);
+Route::post('user', [\App\Http\Controllers\AuthController::class, 'register']);
+Route::post('login', [\App\Http\Controllers\AuthController::class, 'login']);
 
-Route::post('user', [\App\Http\Controllers\UserController::class, 'store']);
-
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+//Protected Routes
+Route::group(['middleware' => ['auth:sanctum']], function () {
+    Route::post('listing', [\App\Http\Controllers\ListingController::class, 'store']);
+    Route::put('listing/{id}', [\App\Http\Controllers\ListingController::class, 'update']);
+    Route::delete('listing/{id}', [\App\Http\Controllers\ListingController::class, 'destroy']);
 });
