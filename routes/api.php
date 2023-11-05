@@ -16,9 +16,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/books', function (){
-   return \App\Http\Resources\BookResource::collection(Book::all());
-});
+Route::get('/books', [\App\Http\Controllers\BookController::class, 'index']);
 
 Route::get('/book/{id}', function ($id){
    return new \App\Http\Resources\BookResource(Book::findOrFail($id));
@@ -28,9 +26,7 @@ Route::post('book', [\App\Http\Controllers\BookController::class, 'store']);
 Route::put('book/{id}', [\App\Http\Controllers\BookController::class, 'update']);
 Route::delete('book/{id}', [\App\Http\Controllers\BookController::class, 'destroy']);
 
-Route::get('/listings', function (){
-    return \App\Http\Resources\ListingResource::collection(Listing::all());
-});
+Route::get('listings', [\App\Http\Controllers\ListingController::class, 'index']);
 //
 Route::get('/listing/{id}', function ($id){
     return new \App\Http\Resources\ListingResource(Listing::findOrFail($id));

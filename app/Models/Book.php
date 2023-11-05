@@ -14,6 +14,6 @@ use Illuminate\Database\Eloquent\Model;
 class Book extends Model
 {
     protected $fillable = ['title', 'author', 'publisher'];
-    protected $table = 'books';
+//    protected $table = 'books';
     use HasFactory;
 }
