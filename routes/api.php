@@ -36,6 +36,8 @@ Route::post('listing', [\App\Http\Controllers\ListingController::class, 'store']
 Route::put('listing/{id}', [\App\Http\Controllers\ListingController::class, 'update']);
 Route::delete('listing/{id}', [\App\Http\Controllers\ListingController::class, 'destroy']);
 
+Route::post('user', [\App\Http\Controllers\UserController::class, 'store']);
+
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
