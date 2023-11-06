@@ -15,6 +15,7 @@ return new class extends Migration
             $table->increments('id');
             $table->string('title');
             $table->foreignId('book_id')->references('id')->on('books')->onDelete('cascade');
+            $table->foreignId('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->string('price');
             $table->string('status');
             $table->timestamps();

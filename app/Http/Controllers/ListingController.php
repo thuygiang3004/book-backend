@@ -2,10 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Book;
 use App\Models\Listing;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
 
 /**
@@ -44,11 +42,11 @@ class ListingController extends Controller
         if($validator->fails()){
             return $this->sendError('Validation Error', $validator->errors());
         }
-        $listing = Listing::create($input);
+        $request->user()->listings()->create($input);
         return response()->json([
             'success' => true,
             'message' => 'Listing created',
-            'listing' => $listing
+            'listing' => $input
         ]);
     }
 
