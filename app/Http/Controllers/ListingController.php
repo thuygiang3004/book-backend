@@ -47,7 +47,7 @@ class ListingController extends Controller
             'success' => true,
             'message' => 'Listing created',
             'listing' => $input
-        ]);
+        ], 200);
     }
 
     /**
@@ -99,7 +99,7 @@ class ListingController extends Controller
             'success' => true,
             'message' => 'Listing updated successfully',
             'listing' => $listing
-        ]);
+        ], 200);
     }
 
     /**
