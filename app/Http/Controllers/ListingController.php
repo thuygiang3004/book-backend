@@ -71,36 +71,61 @@ class ListingController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        if(Listing::where('id', $id)->exists()){
-            $listing = Listing::find($id);
-            $listing->title = $request->title;
-            $listing->book_id = $request->book_id;
-            $listing->price = $request->price;
-            $listing->status = $request->status;
-            $listing->save();
-            return response()->json([
-                'message' => 'Listing Updated'
-            ], 200);
+        $listing = Listing::find($id);
+
+        if (!$listing) {
+            return $this->sendError('Listing not found');
         }
+
+        if ($request->user()->id !== $listing->user_id) {
+            return $this->sendError('Unauthorized');
+        }
+
+        $input = $request->all();
+        $validator = Validator::make($input, [
+            'title' => 'required',
+            'book_id' => 'required',
+            'price' => 'required',
+            'status' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return $this->sendError('Validation Error', $validator->errors());
+        }
+
+        $listing->update($input);
+
         return response()->json([
-            'message' => 'Listing not found'
-        ], 404);
+            'success' => true,
+            'message' => 'Listing updated successfully',
+            'listing' => $listing
+        ]);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(string $id, Request $request)
     {
-        if(Listing::where('id', $id)->exists()){
-            $listing = Listing::find($id);
-            $listing->delete();
+        $listing = Listing::find($id);
+
+        if (!$listing) {
             return response()->json([
-                'message' => 'Listing deleted'
-            ], 200);
+                'message' => 'Listing not found'
+            ], 404);
         }
+
+        // Check if the authenticated user is the owner of the listing
+        if ($request->user()->id !== $listing->user_id) {
+            return response()->json([
+                'message' => 'Unauthorized. You do not have permission to delete this listing.'
+            ], 403);
+        }
+
+        $listing->delete();
+
         return response()->json([
-            'message' => 'Listing not found'
-        ], 404);
+            'message' => 'Listing deleted successfully'
+        ], 200);
     }
 }
