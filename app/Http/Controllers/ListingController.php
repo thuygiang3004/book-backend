@@ -77,7 +77,7 @@ class ListingController extends Controller
             return $this->sendError('Listing not found');
         }
 
-        if ($request->user()->id !== $listing->user_id) {
+        if (!$request->user()->is($listing->user)) {
             return $this->sendError('Unauthorized');
         }
 
@@ -116,7 +116,7 @@ class ListingController extends Controller
         }
 
         // Check if the authenticated user is the owner of the listing
-        if ($request->user()->id !== $listing->user_id) {
+        if (!$request->user()->is($listing->user)) {
             return response()->json([
                 'message' => 'Unauthorized. You do not have permission to delete this listing.'
             ], 403);
