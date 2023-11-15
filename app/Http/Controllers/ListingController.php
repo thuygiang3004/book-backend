@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Book;
 use App\Models\Listing;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -16,7 +17,20 @@ class ListingController extends Controller
      */
     public function index()
     {
-        return Listing::all();
+        $listings = Listing::all();
+
+        return $listings->map(function ($listing) {
+            $bookName = Book::where('id', $listing->book_id)->value('title');
+
+            return [
+                'id' => $listing->id,
+                'title' => $listing->title,
+                'price' => $listing->price,
+                'status' => $listing->status,
+                'book_id' => $listing->book_id,
+                'book_name' => $bookName,
+            ];
+        });
     }
 
     /**

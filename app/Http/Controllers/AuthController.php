@@ -53,7 +53,11 @@ class AuthController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Logged in',
-            'token' => $token
+            'user' => [
+                'token' => $token,
+                'userName' => $loginUser->name,
+                'userEmail' => $loginUser->email,
+            ]
         ]);
 
     }
