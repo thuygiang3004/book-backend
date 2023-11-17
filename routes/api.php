@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/books', [\App\Http\Controllers\BookController::class, 'index']);
+Route::get('books/import', [\App\Http\Controllers\BookController::class, 'import'])->name('books.import');
 
 Route::get('/book/{id}', function ($id){
    return new \App\Http\Resources\BookResource(Book::findOrFail($id));
