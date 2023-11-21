@@ -6,9 +6,6 @@ use App\Models\Listing;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
-/**
- * @method sendError(string $string, \Illuminate\Support\MessageBag $errors)
- */
 class ListingController extends Controller
 {
     /**
@@ -19,7 +16,7 @@ class ListingController extends Controller
         $listings = Listing::all();
 
         return $listings->map(function ($listing) {
-//            $bookName = Book::where('id', $listing->book_id)->value('title');
+            //            $bookName = Book::where('id', $listing->book_id)->value('title');
 
             return [
                 'id' => $listing->id,
@@ -45,21 +42,33 @@ class ListingController extends Controller
      */
     public function store(Request $request)
     {
-        $input = $request -> all();
+        $input = $request->all();
         $validator = Validator::make($input, [
-           'title' => 'required',
-           'book_id' => 'required',
-           'price' => 'required',
-           'status' => 'required',
+            'title' => 'required',
+            'book_id' => 'required',
+            'price' => 'required',
+            'status' => 'required',
+            'image' => 'image|mimes:png,jpg,jpeg',
         ]);
-        if($validator->fails()){
+
+        if ($validator->fails()) {
+            dump($validator->errors());
+
             return $this->sendError('Validation Error', $validator->errors());
         }
+
+        if ($request['image']) {
+            $imageName = uniqid() . '.' . $request->image->extension();
+            $request->image->storeAs('images', $imageName, 'public');
+            $input['images'] = 'images/' . $imageName;
+        }
+
         $request->user()->listings()->create($input);
+
         return response()->json([
             'success' => true,
             'message' => 'Listing created',
-            'listing' => $input
+            'listing' => $input,
         ], 200);
     }
 
@@ -111,7 +120,7 @@ class ListingController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Listing updated successfully',
-            'listing' => $listing
+            'listing' => $listing,
         ], 200);
     }
 
@@ -124,21 +133,35 @@ class ListingController extends Controller
 
         if (!$listing) {
             return response()->json([
-                'message' => 'Listing not found'
+                'message' => 'Listing not found',
             ], 404);
         }
 
         // Check if the authenticated user is the owner of the listing
         if (!$request->user()->is($listing->user)) {
             return response()->json([
-                'message' => 'Unauthorized. You do not have permission to delete this listing.'
+                'message' => 'Unauthorized. You do not have permission to delete this listing.',
             ], 403);
         }
 
         $listing->delete();
 
         return response()->json([
-            'message' => 'Listing deleted successfully'
+            'message' => 'Listing deleted successfully',
         ], 200);
+    }
+
+    public function sendError($message, $data = [], $code = 404)
+    {
+        $response = [
+            'success' => false,
+            'message' => $message,
+        ];
+
+        if (!empty($data)) {
+            $response['data'] = $data;
+        }
+
+        return response()->json($response, $code);
     }
 }

@@ -14,8 +14,9 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class Listing extends Model
 {
-    protected $fillable = ['title', 'book_id', 'price', 'status'];
-//    protected $table='listings';
+    protected $fillable = ['title', 'book_id', 'price', 'status', 'images'];
+
+    //    protected $table='listings';
     use HasFactory;
 
     public function user(): BelongsTo
@@ -27,5 +28,4 @@ class Listing extends Model
     {
         return $this->belongsTo(Book::class);
     }
-
 }

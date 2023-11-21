@@ -18,8 +18,8 @@ use Illuminate\Support\Facades\Route;
 Route::get('/books', [\App\Http\Controllers\BookController::class, 'index']);
 Route::get('books/import', [\App\Http\Controllers\BookController::class, 'import'])->name('books.import');
 
-Route::get('/book/{id}', function ($id){
-   return new \App\Http\Resources\BookResource(Book::findOrFail($id));
+Route::get('/book/{id}', function ($id) {
+    return new \App\Http\Resources\BookResource(Book::findOrFail($id));
 });
 
 Route::post('book', [\App\Http\Controllers\BookController::class, 'store']);
@@ -28,7 +28,7 @@ Route::delete('book/{id}', [\App\Http\Controllers\BookController::class, 'destro
 
 Route::get('listings', [\App\Http\Controllers\ListingController::class, 'index']);
 //
-Route::get('/listing/{id}', function ($id){
+Route::get('/listing/{id}', function ($id) {
     return new \App\Http\Resources\ListingResource(Listing::findOrFail($id));
 });
 

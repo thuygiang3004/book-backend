@@ -21,7 +21,7 @@ class AuthController extends Controller
         $validator = Validator::make($input, [
             'name' => 'required',
             'email' => 'required | email',
-            'password' => 'required'
+            'password' => 'required',
         ]);
         if ($validator->fails()) {
             return $this->sendError('Validation Error', $validator->errors());
@@ -29,9 +29,10 @@ class AuthController extends Controller
         $user = User::create([
             'name' => $input['name'],
             'email' => $input['email'],
-            'password' => bcrypt($input['password'])
+            'password' => bcrypt($input['password']),
         ]);
         $token = $user->createToken('token')->plainTextToken;
+
         return response()->json([
             'success' => true,
             'message' => 'User created',
@@ -50,6 +51,7 @@ class AuthController extends Controller
             ], 401);
         }
         $token = $loginUser->createToken('token')->plainTextToken;
+
         return response()->json([
             'success' => true,
             'message' => 'Logged in',
@@ -57,9 +59,8 @@ class AuthController extends Controller
                 'token' => $token,
                 'userName' => $loginUser->name,
                 'userEmail' => $loginUser->email,
-            ]
+            ],
         ]);
 
     }
-
 }

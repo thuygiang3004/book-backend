@@ -24,8 +24,10 @@ class BookController extends Controller
     {
         $books = $this->getBooksFromOpenLibrary();
         $this->createBookInDB($books);
-        return ($books);
+
+        return $books;
     }
+
     /**
      * Show the form for creating a new resource.
      */
@@ -39,18 +41,19 @@ class BookController extends Controller
      */
     public function store(Request $request)
     {
-        $input = $request -> all();
+        $input = $request->all();
         $validator = Validator::make($input, [
-            'title'=>'required'
+            'title' => 'required',
         ]);
-        if($validator->fails()){
+        if ($validator->fails()) {
             return $this->sendError('Validation Error', $validator->errors());
         }
         $book = Book::create($input);
+
         return response()->json([
-           'success' => true,
+            'success' => true,
             'message' => 'Book created',
-            'book' => $book
+            'book' => $book,
         ]);
     }
 
@@ -95,11 +98,12 @@ class BookController extends Controller
             $book->save();
 
             return response()->json([
-                'message' => 'Book updated'
+                'message' => 'Book updated',
             ], 200);
         }
+
         return response()->json([
-            'message' => 'Book not found'
+            'message' => 'Book not found',
         ], 404);
     }
 
@@ -108,45 +112,41 @@ class BookController extends Controller
      */
     public function destroy(string $id)
     {
-        if(Book::where('id', $id)->exists()){
+        if (Book::where('id', $id)->exists()) {
             $book = Book::find($id);
             $book->delete();
+
             return response()->json([
-                'message' => 'Book deleted'
+                'message' => 'Book deleted',
             ], 200);
         }
+
         return response()->json([
-            'message' => 'Book not found'
+            'message' => 'Book not found',
         ], 404);
     }
 
-    /**
-     * @return mixed
-     */
     public function getBooksFromOpenLibrary(): mixed
     {
-        $books = Http::get('https://openlibrary.org/subjects/culture.json?published_in=1500-2020')->json()["works"];
+        $books = Http::get('https://openlibrary.org/subjects/culture.json?published_in=1500-2020')->json()['works'];
+
         return $books;
     }
 
-    /**
-     * @param mixed $books
-     * @return void
-     */
     public function createBookInDB(mixed $books): void
     {
         foreach (collect($books) as $bookData) {
-            $existingBook = Book::where("title", $bookData["title"])->first();
+            $existingBook = Book::where('title', $bookData['title'])->first();
 
             if ($existingBook) {
-                $existingBook->title = $bookData["title"];
+                $existingBook->title = $bookData['title'];
                 $existingBook->author = $bookData['authors'][0]['name'] ?? null;
                 $existingBook->save();
             } else {
                 Book::create([
-                    "title" => $bookData["title"],
-                    "author" => $bookData['authors'][0]['name'] ?? null,
-                    "publisher" => 'unknown',
+                    'title' => $bookData['title'],
+                    'author' => $bookData['authors'][0]['name'] ?? null,
+                    'publisher' => 'unknown',
                 ]);
             }
         }
