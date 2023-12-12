@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('listings', function (Blueprint $table) {
             $table->increments('id');
             $table->string('title');
-            $table->foreignId('book_id')->references('id')->on('books')->onDelete('cascade');
             $table->foreignId('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->string('price');
             $table->string('status');
