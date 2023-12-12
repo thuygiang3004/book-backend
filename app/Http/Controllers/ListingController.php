@@ -16,15 +16,12 @@ class ListingController extends Controller
         $listings = Listing::all();
 
         return $listings->map(function ($listing) {
-            //            $bookName = Book::where('id', $listing->book_id)->value('title');
-
             return [
                 'id' => $listing->id,
                 'title' => $listing->title,
                 'price' => $listing->price,
                 'status' => $listing->status,
-                'book_id' => $listing->book_id,
-                'book_name' => $listing->book->title,
+                'books' => $listing->books,
             ];
         });
     }
