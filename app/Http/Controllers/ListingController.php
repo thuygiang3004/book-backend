@@ -39,36 +39,27 @@ class ListingController extends Controller
      */
     public function store(Request $request)
     {
-        $input = $request->all();
-
-        $validator = Validator::make($input, [
+        $validated = $request->validate([
             'title' => 'required',
-//            'books' => 'required',
+            'books' => 'required|array',
             'price' => 'required',
             'status' => 'required',
             'image' => 'image|mimes:png,jpg,jpeg',
         ]);
 
-
-        if ($validator->fails()) {
-            dump($validator->errors());
-
-            return $this->sendError('Validation Error', $validator->errors());
-        }
-
         if ($request['image']) {
             $imageName = uniqid() . '.' . $request->image->extension();
             $request->image->storeAs('images', $imageName, 'public');
-            $input['images'] = 'images/' . $imageName;
+            $validated['images'] = 'images/' . $imageName;
         }
 
-        $listing = $request->user()->listings()->create($input);
-        $listing->books()->attach($input['books']);
+        $listing = $request->user()->listings()->create($validated);
+        $listing->books()->attach($validated['books']);
 
         return response()->json([
             'success' => true,
             'message' => 'Listing created',
-            'listing' => $input,
+            'listing' => $listing,
         ], 200);
     }
 
