@@ -14,8 +14,8 @@ return new class extends Migration {
             $table->id();
             $table->integer('book_id')->unsigned()->index();
             $table->foreign('book_id')->references('id')->on('books')->onDelete('cascade');
-            $table->integer('listing')->unsigned()->index();
-            $table->foreign('listing')->references('id')->on('listings')->onDelete('cascade');
+            $table->integer('listing_id')->unsigned()->index();
+            $table->foreign('listing_id')->references('id')->on('listings')->onDelete('cascade');
             $table->timestamps();
         });
     }

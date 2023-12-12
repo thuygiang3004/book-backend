@@ -43,13 +43,15 @@ class ListingController extends Controller
     public function store(Request $request)
     {
         $input = $request->all();
+
         $validator = Validator::make($input, [
             'title' => 'required',
-            'book_id' => 'required',
+//            'books' => 'required',
             'price' => 'required',
             'status' => 'required',
             'image' => 'image|mimes:png,jpg,jpeg',
         ]);
+
 
         if ($validator->fails()) {
             dump($validator->errors());
@@ -63,7 +65,8 @@ class ListingController extends Controller
             $input['images'] = 'images/' . $imageName;
         }
 
-        $request->user()->listings()->create($input);
+        $listing = $request->user()->listings()->create($input);
+        $listing->books()->attach($input['books']);
 
         return response()->json([
             'success' => true,

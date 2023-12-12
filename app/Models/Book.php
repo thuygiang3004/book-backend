@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 /**
  * @method static findOrFail($id)
@@ -19,8 +19,8 @@ class Book extends Model
     //    protected $table = 'books';
     use HasFactory;
 
-    public function listings(): HasMany
+    public function listings(): BelongsToMany
     {
-        return $this->hasMany(Listing::class);
+        return $this->belongsToMany(Listing::class);
     }
 }
