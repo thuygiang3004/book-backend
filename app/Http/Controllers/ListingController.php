@@ -13,7 +13,7 @@ class ListingController extends Controller
      */
     public function index()
     {
-        $listings = Listing::query()->with('books');
+        $listings = Listing::query()->with('books')->get();
 
         return $listings->map(function ($listing) {
             return [
