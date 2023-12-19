@@ -55,10 +55,19 @@ class ListingController extends Controller
             'status' => $validated['status'],
             'images' => $validated['images'],
         ];
+        $booksWithOrder = [];
+        $books = $validated['books'];
+        for ($i = 0; $i < count($books); $i++) {
+            $booksWithOrder[$books[$i]] = [
+                'book_id' => $books[$i],
+                'order' => $i,
+            ];
+        }
+
         $request->user()->listings()
             ->create($bookInput)
             ->books()
-            ->attach($validated['books']);
+            ->attach($booksWithOrder);
 
         $listing = $request->user()->listings()->with('books')->orderBy('created_at', 'desc')->first()->toArray();
         return response()->json([
