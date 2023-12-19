@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ListingResource;
 use App\Models\Listing;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -16,13 +17,7 @@ class ListingController extends Controller
         $listings = Listing::query()->with('books')->get();
 
         return $listings->map(function ($listing) {
-            return [
-                'id' => $listing->id,
-                'title' => $listing->title,
-                'price' => $listing->price,
-                'status' => $listing->status,
-                'books' => $listing->books,
-            ];
+            return ListingResource::make($listing);
         });
     }
 
