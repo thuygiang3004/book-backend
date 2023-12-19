@@ -13,7 +13,7 @@ class ListingController extends Controller
      */
     public function index()
     {
-        $listings = Listing::all();
+        $listings = Listing::query()->with('books');
 
         return $listings->map(function ($listing) {
             return [
@@ -42,6 +42,7 @@ class ListingController extends Controller
         $validated = $request->validate([
             'title' => 'required',
             'books' => 'required|array',
+            'books.*' => 'exists:books,id', //check book exists
             'price' => 'required',
             'status' => 'required',
             'image' => 'image|mimes:png,jpg,jpeg',
@@ -53,9 +54,18 @@ class ListingController extends Controller
             $validated['images'] = 'images/' . $imageName;
         }
 
-        $listing = $request->user()->listings()->create($validated);
-        $listing->books()->attach($validated['books']);
+        $bookInput = [
+            'title' => $validated['title'],
+            'price' => $validated['price'],
+            'status' => $validated['status'],
+            'images' => $validated['images'],
+        ];
+        $request->user()->listings()
+            ->create($bookInput)
+            ->books()
+            ->attach($validated['books']);
 
+        $listing = $request->user()->listings()->with('books')->orderBy('created_at', 'desc')->first()->toArray();
         return response()->json([
             'success' => true,
             'message' => 'Listing created',
