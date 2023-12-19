@@ -55,14 +55,13 @@ class ListingController extends Controller
             'status' => $validated['status'],
             'images' => $validated['images'],
         ];
-        $booksWithOrder = [];
-        $books = $validated['books'];
-        for ($i = 0; $i < count($books); $i++) {
-            $booksWithOrder[$books[$i]] = [
-                'book_id' => $books[$i],
-                'order' => $i,
-            ];
-        }
+        $booksWithOrder = collect($request->input('books'))
+            ->map(function ($bookId, $index) {
+                return [
+                    'book_id' => $bookId,
+                    'order' => $index,
+                ];
+            });
 
         $request->user()->listings()
             ->create($bookInput)
