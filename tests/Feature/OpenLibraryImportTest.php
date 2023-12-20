@@ -2,11 +2,13 @@
 
 namespace Tests\Feature;
 
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Http;
 use Tests\TestCase;
 
 class OpenLibraryImportTest extends TestCase
 {
+    use RefreshDatabase;
     public function test_http_client_get(): void
     {
         $response = Http::get('http://127.0.0.1:8000/api/listings');
@@ -20,7 +22,7 @@ class OpenLibraryImportTest extends TestCase
             $this->assertArrayHasKey('title', $item);
             $this->assertArrayHasKey('price', $item);
             $this->assertArrayHasKey('status', $item);
-            $this->assertArrayHasKey('book_id', $item);
+            $this->assertArrayHasKey('books', $item);
         }
 
     }
