@@ -47,7 +47,7 @@ class ListingController extends Controller
             $imageName = uniqid() . '.' . $request->image->extension();
             $request->image->storeAs('images', $imageName, 'public');
             $validated['images'] = 'images/' . $imageName;
-        }
+        } else $validated['images'] = null;
 
         $bookInput = [
             'title' => $validated['title'],
@@ -73,7 +73,7 @@ class ListingController extends Controller
             'success' => true,
             'message' => 'Listing created',
             'listing' => $listing,
-        ], 200);
+        ], 201);
     }
 
     /**
