@@ -14,11 +14,9 @@ class ListingController extends Controller
      */
     public function index()
     {
-        $listings = Listing::query()->with('books')->get();
+        $listings = Listing::query()->with('books')->paginate(10);
 
-        return $listings->map(function ($listing) {
-            return ListingResource::make($listing);
-        });
+        return ListingResource::collection($listings);
     }
 
     /**
