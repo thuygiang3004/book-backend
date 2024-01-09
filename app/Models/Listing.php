@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  */
 class Listing extends Model
 {
-    protected $fillable = ['title', 'book_id', 'price', 'status', 'images'];
+    protected $fillable = ['title', 'price', 'status', 'images'];
 
     //    protected $table='listings';
     use HasFactory;
