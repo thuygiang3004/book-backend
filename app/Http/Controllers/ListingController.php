@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\ListingCreated;
 use App\Http\Resources\ListingResource;
 use App\Models\Listing;
 use Illuminate\Http\Request;
@@ -61,12 +62,12 @@ class ListingController extends Controller
                 ];
             });
 
-        $request->user()->listings()
-            ->create($bookInput)
-            ->books()
-            ->attach($booksWithOrder);
+        $listing = $request->user()->listings()->create($bookInput);
+        $listing->books()->attach($booksWithOrder);
+        $listing->load('books');
 
-        $listing = $request->user()->listings()->with('books')->orderBy('created_at', 'desc')->first()->toArray();
+        event(new ListingCreated($listing));
+
         return response()->json([
             'success' => true,
             'message' => 'Listing created',
