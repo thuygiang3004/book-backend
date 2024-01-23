@@ -65,6 +65,7 @@ class ListingController extends Controller
         $listing = $request->user()->listings()->create($bookInput);
         $listing->books()->attach($booksWithOrder);
         $listing->load('books');
+        $listing->load('user');
 
         event(new ListingCreated($listing));
 

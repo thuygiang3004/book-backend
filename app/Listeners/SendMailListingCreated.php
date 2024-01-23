@@ -21,6 +21,6 @@ class SendMailListingCreated
      */
     public function handle(ListingCreated $event): void
     {
-        Mail::to('thuygiang3004@gmail.com')->send(new ListingCreatedMail($event->listing));
+        Mail::to($event->listing->user->email)->send(new ListingCreatedMail($event->listing));
     }
 }
