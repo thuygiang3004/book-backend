@@ -19,6 +19,7 @@ class EventServiceProvider extends ServiceProvider
         ],
         'App\Events\ListingCreated' => [
             'App\Listeners\LogListingCreated',
+            'App\Listeners\SendMailListingCreated',
         ],
     ];
 
