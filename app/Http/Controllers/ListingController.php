@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Events\ListingCreated;
+use App\Filters\ByPrice;
+use App\Filters\ByTitle;
 use App\Http\Resources\ListingResource;
 use App\Models\Listing;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Pipeline;
 use Illuminate\Support\Facades\Validator;
 
 class ListingController extends Controller
@@ -15,7 +18,14 @@ class ListingController extends Controller
      */
     public function index()
     {
-        $listings = Listing::query()->with('books')->paginate(10);
+        $pipes = [
+            ByTitle::class,
+            ByPrice::class,
+        ];
+        $listings = Pipeline::send(Listing::query())
+            ->through($pipes)
+            ->thenReturn()
+            ->paginate(10);
 
         return ListingResource::collection($listings);
     }

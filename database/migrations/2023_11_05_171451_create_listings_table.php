@@ -15,7 +15,7 @@ return new class extends Migration
             $table->increments('id');
             $table->string('title');
             $table->foreignId('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->string('price');
+            $table->unsignedBigInteger('price');
             $table->string('status');
             $table->string('images')->nullable();
             $table->timestamps();

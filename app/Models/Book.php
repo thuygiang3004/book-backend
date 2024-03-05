@@ -23,4 +23,9 @@ class Book extends Model
     {
         return $this->belongsToMany(Listing::class);
     }
+
+    public function comments()
+    {
+        return $this->morphMany(Comment::class, 'commentable');
+    }
 }

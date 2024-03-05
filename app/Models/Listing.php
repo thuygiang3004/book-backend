@@ -29,4 +29,9 @@ class Listing extends Model
     {
         return $this->belongsToMany(Book::class)->withPivot('order');
     }
+
+    public function comments()
+    {
+        return $this->morphMany(Comment::class, 'commentable');
+    }
 }
