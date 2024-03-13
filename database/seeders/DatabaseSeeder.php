@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\Book;
+use App\Models\Listing;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
@@ -16,11 +17,6 @@ class DatabaseSeeder extends Seeder
     {
         User::factory(10)->create();
         User::factory()->create(['email' => 'giang2@gmail.com']);
-        Book::factory(20)->hasListings(2)->create();
-
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+        Book::factory(20)->has(Listing::factory(2)->hasComments(2))->hasComments(3)->create();
     }
 }
