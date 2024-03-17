@@ -17,10 +17,11 @@ class ListingResource extends JsonResource
         return [
             'id' => $this->id,
             'title' => $this->title,
-            'books' => $this->books,
+            'books' => $this->books->load('comments'),
             'price' => $this->price,
             'status' => $this->status,
             'images' => $this->images,
+            'comments' => $this->comments,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];
