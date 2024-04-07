@@ -14,25 +14,33 @@ class ListingControllerTest extends TestCase
 {
     use RefreshDatabase;
 
-    /**
-     * A basic feature test example.
-     */
     #[Test]
     public function it_returns_listings(): void
     {
         $listing = Listing::factory()->hasBooks(2)->create();
 
         $response = $this->get('/api/listings')->assertStatus(200);
-        $response->assertJson([
-            [
-                'id' => $listing->id,
-                'title' => $listing->title,
-                'books' => $listing->books->toArray(),
-                'price' => $listing->price,
-                'status' => $listing->status,
-                'images' => $listing->images,
+
+        $response->assertJsonStructure([
+            'data' => [
+                '*' => [
+                    'id',
+                    'title',
+                    'books',
+                    'price',
+                    'status',
+                    'images',
+                ]
             ]
+        ])->assertJsonFragment([
+            'id' => $listing->id,
+            'title' => $listing->title,
+            'price' => $listing->price,
+            'status' => $listing->status,
+            'images' => $listing->images,
         ]);
+
+        $this->assertEquals($listing->books->load('comments')->toArray(), $response->json('data.0.books'));
     }
 
     #[Test]
