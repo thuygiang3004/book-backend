@@ -44,7 +44,7 @@ class ListingControllerTest extends TestCase
     }
 
     #[Test]
-    public function it_can_create_a_listing()
+    public function it_can_create_a_listing(): void
     {
         $user = User::factory()->create();
         $book = Book::factory()->create();
@@ -63,5 +63,23 @@ class ListingControllerTest extends TestCase
             'book_id' => $book->id,
             'listing_id' => $response->json('listing.id'),
         ]);
+    }
+
+    #[Test]
+    public function it_shows_a_listing(): void
+    {
+        $listing = Listing::factory()->hasBooks()->hasComments()->create();
+        $response = $this->get(route('listing.show', $listing->id));
+
+        $response->assertJsonFragment([
+            'id' => $listing->id,
+            'title' => $listing->title,
+            'price' => $listing->price,
+            'status' => $listing->status,
+            'images' => $listing->images,
+        ]);
+
+        $this->assertEquals($listing->books->load('comments')->toArray(), $response->json('books'));
+        $this->assertEquals($listing->comments->toArray(), $response->json('comments'));
     }
 }

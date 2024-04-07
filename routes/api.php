@@ -5,9 +5,7 @@ use App\Http\Controllers\BookController;
 use App\Http\Controllers\ListingController;
 use App\Http\Controllers\ListingSearchController;
 use App\Http\Resources\BookResource;
-use App\Http\Resources\ListingResource;
 use App\Models\Book;
-use App\Models\Listing;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -34,9 +32,7 @@ Route::delete('book/{id}', [BookController::class, 'destroy']);
 
 Route::get('listings', [ListingController::class, 'index'])->name('listings.index');
 Route::get('listings/search', ListingSearchController::class)->name('listings.search');
-Route::get('/listing/{id}', function ($id) {
-    return new ListingResource(Listing::findOrFail($id));
-})->name('listing.show');
+Route::get('/listing/{id}', [ListingController::class, 'show'])->name('listing.show');
 
 Route::post('user', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
