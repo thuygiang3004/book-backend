@@ -35,7 +35,7 @@ Route::get('listings/search', ListingSearchController::class)->name('listings.se
 Route::get('/listing/{listing}', [ListingController::class, 'show'])->name('listing.show');
 
 Route::post('user', [AuthController::class, 'register']);
-Route::post('login', [AuthController::class, 'login']);
+Route::post('login', [AuthController::class, 'login'])->name('login');
 
 //Protected Routes
 Route::group(['middleware' => ['auth:sanctum']], function () {

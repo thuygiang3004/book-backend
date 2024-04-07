@@ -44,7 +44,7 @@ class ListingControllerTest extends TestCase
     }
 
     #[Test]
-    public function it_can_create_a_listing(): void
+    public function it_can_create_a_listing_if_logged_in(): void
     {
         $user = User::factory()->create();
         $book = Book::factory()->create();
@@ -63,6 +63,20 @@ class ListingControllerTest extends TestCase
             'book_id' => $book->id,
             'listing_id' => $response->json('listing.id'),
         ]);
+    }
+
+    #[Test]
+    public function it_redirect_to_login_route_if_not_logged_in(): void
+    {
+        $book = Book::factory()->create();
+        $postData = [
+            'title' => 'my title',
+            'books' => [$book->id],
+            'price' => 100,
+            'status' => 'new',
+        ];
+        $response = $this->post(route('listing.store'), $postData);
+        $response->assertRedirectToRoute('login');
     }
 
     #[Test]
