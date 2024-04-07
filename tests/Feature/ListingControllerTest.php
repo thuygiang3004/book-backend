@@ -69,7 +69,7 @@ class ListingControllerTest extends TestCase
     public function it_shows_a_listing(): void
     {
         $listing = Listing::factory()->hasBooks()->hasComments()->create();
-        $response = $this->get(route('listing.show', $listing->id));
+        $response = $this->get(route('listing.show', $listing));
 
         $response->assertJsonFragment([
             'id' => $listing->id,
@@ -81,5 +81,14 @@ class ListingControllerTest extends TestCase
 
         $this->assertEquals($listing->books->load('comments')->toArray(), $response->json('books'));
         $this->assertEquals($listing->comments->toArray(), $response->json('comments'));
+    }
+
+    #[Test]
+    public function it_shows_not_found_error_if_listing_does_not_exist(): void
+    {
+        $response = $this->get(route('listing.show', 999));
+
+        $response->assertStatus(404)
+            ->assertJsonFragment(['message' => 'Listing not found']);
     }
 }
