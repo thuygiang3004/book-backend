@@ -32,19 +32,18 @@ Route::post('book', [BookController::class, 'store']);
 Route::put('book/{id}', [BookController::class, 'update']);
 Route::delete('book/{id}', [BookController::class, 'destroy']);
 
-Route::get('listings', [ListingController::class, 'index']);
-Route::get('listings/search', ListingSearchController::class);
-//
+Route::get('listings', [ListingController::class, 'index'])->name('listings.index');
+Route::get('listings/search', ListingSearchController::class)->name('listings.search');
 Route::get('/listing/{id}', function ($id) {
     return new ListingResource(Listing::findOrFail($id));
-});
+})->name('listing.show');
 
 Route::post('user', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
 
 //Protected Routes
 Route::group(['middleware' => ['auth:sanctum']], function () {
-    Route::post('listing', [ListingController::class, 'store']);
+    Route::post('listing', [ListingController::class, 'store'])->name('listing.store');
     Route::put('listing/{id}', [ListingController::class, 'update']);
     Route::delete('listing/{id}', [ListingController::class, 'destroy']);
 });

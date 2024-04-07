@@ -19,7 +19,7 @@ class ListingControllerTest extends TestCase
     {
         $listing = Listing::factory()->hasBooks(2)->create();
 
-        $response = $this->get('/api/listings')->assertStatus(200);
+        $response = $this->get(route('listings.index'))->assertStatus(200);
 
         $response->assertJsonStructure([
             'data' => [
@@ -54,7 +54,7 @@ class ListingControllerTest extends TestCase
             'price' => 100,
             'status' => 'new',
         ];
-        $response = $this->actingAs($user)->post('/api/listing', $postData);
+        $response = $this->actingAs($user)->post(route('listing.store'), $postData);
         $response->assertStatus(201);
 
         $this->assertDatabaseHas('listings', Arr::except($postData, 'books'));
