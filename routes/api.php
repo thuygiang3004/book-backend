@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ListingController;
 use App\Http\Controllers\ListingSearchController;
 use App\Http\Resources\BookResource;
@@ -42,4 +43,6 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('listing', [ListingController::class, 'store'])->name('listing.store');
     Route::put('listing/{id}', [ListingController::class, 'update']);
     Route::delete('listing/{id}', [ListingController::class, 'destroy']);
+
+    Route::resource('comment', CommentController::class)->only('store');
 });
