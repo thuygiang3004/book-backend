@@ -19,7 +19,7 @@ class ListingControllerTest extends TestCase
     {
         $listing = Listing::factory()->hasBooks(2)->create();
 
-        $response = $this->get(route('listings.index'))->assertStatus(200);
+        $response = $this->getJson(route('listings.index'))->assertStatus(200);
 
         $response->assertJsonStructure([
             'data' => [
@@ -54,7 +54,7 @@ class ListingControllerTest extends TestCase
             'price' => 100,
             'status' => 'new',
         ];
-        $response = $this->actingAs($user)->post(route('listing.store'), $postData);
+        $response = $this->actingAs($user)->postJson(route('listing.store'), $postData);
         $response->assertStatus(201);
 
         $this->assertDatabaseHas('listings', Arr::except($postData, 'books'));
@@ -66,7 +66,7 @@ class ListingControllerTest extends TestCase
     }
 
     #[Test]
-    public function it_redirect_to_login_route_if_not_logged_in(): void
+    public function it_return_unauthorized_errors_when_user_is_not_logged_in(): void
     {
         $book = Book::factory()->create();
         $postData = [
@@ -75,15 +75,15 @@ class ListingControllerTest extends TestCase
             'price' => 100,
             'status' => 'new',
         ];
-        $response = $this->post(route('listing.store'), $postData);
-        $response->assertRedirectToRoute('login');
+        $response = $this->postJson(route('listing.store'), $postData);
+        $response->assertStatus(401);
     }
 
     #[Test]
     public function it_shows_a_listing(): void
     {
         $listing = Listing::factory()->hasBooks()->hasComments()->create();
-        $response = $this->get(route('listing.show', $listing));
+        $response = $this->getJson(route('listing.show', $listing));
 
         $response->assertJsonFragment([
             'id' => $listing->id,
@@ -100,7 +100,7 @@ class ListingControllerTest extends TestCase
     #[Test]
     public function it_shows_not_found_error_if_listing_does_not_exist(): void
     {
-        $response = $this->get(route('listing.show', 999));
+        $response = $this->getJson(route('listing.show', 999));
 
         $response->assertStatus(404)
             ->assertJsonFragment(['message' => 'Listing not found']);
