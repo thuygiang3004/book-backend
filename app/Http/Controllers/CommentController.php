@@ -11,7 +11,10 @@ class CommentController extends Controller
     public function store(Request $request)
     {
         $listing = Listing::query()->findOrFail($request->input('listing'));
-        $listing->comments()->create(['content' => $request->input('comment')]);
+        $listing->comments()->create([
+            'content' => $request->input('comment'),
+            'user_id' => auth()->user()->id
+        ]);
         return response()->json([], Response::HTTP_CREATED);
     }
 }

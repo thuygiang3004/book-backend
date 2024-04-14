@@ -26,6 +26,8 @@ class CommentControllerTest extends TestCase
 
         $commentModel = Comment::query()->where('content', $comment)->first();
         $this->assertNotEmpty($commentModel, "The comment was not created.");
-        $this->assertTrue($listing->fresh()->comments()->first()->is($commentModel), "The comment was not assigned to the listing");
+        $createdComment = $listing->fresh()->comments()->first();
+        $this->assertTrue($createdComment->is($commentModel), "The comment was not assigned to the listing");
+        $this->assertTrue($createdComment->user->is($normalUser), 'The user was not recorded correctly');
     }
 }
