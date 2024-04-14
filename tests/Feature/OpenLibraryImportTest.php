@@ -30,7 +30,7 @@ class OpenLibraryImportTest extends TestCase
 
     public function test_get_a_book_list_with_author(): void
     {
-        $books = $this->get(route('books.import'));
+        $books = $this->getJson(route('books.import'));
         $books->assertJsonStructure([
             '*' => [
                 'title',
