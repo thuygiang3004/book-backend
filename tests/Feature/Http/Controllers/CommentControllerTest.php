@@ -35,8 +35,8 @@ class CommentControllerTest extends TestCase
     public function user_who_created_a_comment_can_delete_that_comment()
     {
         $commentOwner = User::factory()->create();
-        $comment = Comment::factory()->for(Listing::factory(), 'commentable')
-            ->create(['user_id' => $commentOwner->id]);
+        $comment = Comment::factory()->for(Listing::factory(), 'commentable')->for($commentOwner)
+            ->create();
 
         $this->actingAs($commentOwner)->deleteJson(route('comment.destroy', $comment))->assertStatus(204);
 
@@ -47,8 +47,8 @@ class CommentControllerTest extends TestCase
     public function only_user_who_created_a_comment_can_delete_that_comment()
     {
         $commentOwner = User::factory()->create();
-        $comment = Comment::factory()->for(Listing::factory(), 'commentable')
-            ->create(['user_id' => $commentOwner->id]);
+        $comment = Comment::factory()->for(Listing::factory(), 'commentable')->for($commentOwner)
+            ->create();
 
         $this->actingAs(User::factory()->create())
             ->deleteJson(route('comment.destroy', $comment))
