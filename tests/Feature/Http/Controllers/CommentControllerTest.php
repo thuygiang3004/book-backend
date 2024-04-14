@@ -30,4 +30,16 @@ class CommentControllerTest extends TestCase
         $this->assertTrue($createdComment->is($commentModel), "The comment was not assigned to the listing");
         $this->assertTrue($createdComment->user->is($normalUser), 'The user was not recorded correctly');
     }
+
+    #[Test]
+    public function user_who_created_a_comment_can_delete_that_comment()
+    {
+        $commentOwner = User::factory()->create();
+        $comment = Comment::factory()->for(Listing::factory(), 'commentable')
+            ->create(['user_id' => $commentOwner->id]);
+
+        $this->actingAs($commentOwner)->deleteJson(route('comment.destroy', $comment))->assertStatus(204);
+
+        $this->assertDatabaseMissing('comments', ['id' => $comment->id]);
+    }
 }
