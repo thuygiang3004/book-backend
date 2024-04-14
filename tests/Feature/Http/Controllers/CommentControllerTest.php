@@ -42,4 +42,18 @@ class CommentControllerTest extends TestCase
 
         $this->assertDatabaseMissing('comments', ['id' => $comment->id]);
     }
+
+    #[Test]
+    public function only_user_who_created_a_comment_can_delete_that_comment()
+    {
+        $commentOwner = User::factory()->create();
+        $comment = Comment::factory()->for(Listing::factory(), 'commentable')
+            ->create(['user_id' => $commentOwner->id]);
+
+        $this->actingAs(User::factory()->create())
+            ->deleteJson(route('comment.destroy', $comment))
+            ->assertStatus(403);
+
+        $this->assertTrue($comment->is($comment->refresh()));
+    }
 }

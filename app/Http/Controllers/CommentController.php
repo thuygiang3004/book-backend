@@ -21,9 +21,11 @@ class CommentController extends Controller
 
     public function destroy(Comment $comment)
     {
-        if ($comment->user_id === auth()->user()->id) {
-            $comment->delete();
-            return response()->json([], Response::HTTP_NO_CONTENT);
+        if ($comment->user_id !== auth()->user()->id) {
+            return response()->json([], Response::HTTP_FORBIDDEN);
         }
+
+        $comment->delete();
+        return response()->json([], Response::HTTP_NO_CONTENT);
     }
 }
