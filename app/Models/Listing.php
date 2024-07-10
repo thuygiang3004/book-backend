@@ -7,7 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
-use Laravel\Scout\Searchable;
+
+//use Laravel\Scout\Searchable;
 
 /**
  * @method static findOrFail($id)
@@ -17,7 +18,7 @@ use Laravel\Scout\Searchable;
  */
 class Listing extends Model
 {
-    use Searchable;
+//    use Searchable;
     protected $fillable = ['title', 'price', 'status', 'images'];
 
     //    protected $table='listings';
