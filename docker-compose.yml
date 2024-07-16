@@ -30,5 +30,16 @@ services:
         volumes:
             - dbdata:/var/lib/mysql
 
+    meilisearch:
+        image: getmeili/meilisearch:latest
+        container_name: meilisearch
+        restart: unless-stopped
+        ports:
+            - 7700:7700
+        environment:
+            MEILI_MASTER_KEY: ${MEILISEARCH_KEY}
+        volumes:
+            - ./meilisearch-data:/meilisearch-data
+
 volumes:
     dbdata:
