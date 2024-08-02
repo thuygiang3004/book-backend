@@ -11,7 +11,8 @@ class Comment extends Model
     use HasFactory;
 
     protected $fillable = ['content', 'user_id'];
-    protected $appends = ['user_name'];
+
+//    protected $appends = ['user_name'];
     public function commentable()
     {
         return $this->morphTo();
@@ -22,8 +23,8 @@ class Comment extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function getUserNameAttribute()
-    {
-        return $this->user->name;
-    }
+//    public function getUserNameAttribute()
+//    {
+//        return $this->user->name;
+//    }
 }

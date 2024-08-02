@@ -21,7 +21,7 @@ class ListingResource extends JsonResource
             'price' => $this->price,
             'status' => $this->status,
             'images' => $this->images,
-            'comments' => $this->comments,
+            'comments' => CommentResource::collection($this->comments),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];
