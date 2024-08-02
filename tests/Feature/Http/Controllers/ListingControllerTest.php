@@ -94,7 +94,10 @@ class ListingControllerTest extends TestCase
         ]);
 
         $this->assertEquals($listing->books->load('comments')->toArray(), $response->json('books'));
-        $this->assertEquals($listing->comments->toArray(), $response->json('comments'));
+        $expectedComments = $listing->fresh()->comments
+            ->each(fn($comment) => $comment->user_name = $comment->user()->pluck('name')->first())
+            ->toArray();
+        $this->assertEquals($expectedComments, $response->json('comments'));
     }
 
     #[Test]
