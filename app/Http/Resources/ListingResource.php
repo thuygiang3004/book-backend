@@ -21,9 +21,7 @@ class ListingResource extends JsonResource
             'price' => $this->price,
             'status' => $this->status,
             'images' => $this->images,
-            'comments' => $this->comments->each(function ($comment) {
-                $comment->user_name = $comment->user()->pluck('name')->first();
-            }),
+            'comments' => $this->comments,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];
