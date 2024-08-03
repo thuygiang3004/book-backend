@@ -28,9 +28,6 @@ Route::get('/book/{id}', function ($id) {
     return new BookResource(Book::findOrFail($id));
 });
 
-Route::post('book', [BookController::class, 'store']);
-Route::put('book/{id}', [BookController::class, 'update']);
-Route::delete('book/{id}', [BookController::class, 'destroy']);
 
 Route::get('listings', [ListingController::class, 'index'])->name('listings.index');
 Route::get('listings/search', ListingSearchController::class)->name('listings.search');
@@ -42,6 +39,10 @@ Route::post('login', [AuthController::class, 'login'])->name('login');
 
 //Protected Routes
 Route::group(['middleware' => ['auth:sanctum']], function () {
+    Route::post('book', [BookController::class, 'store'])->name('books.store');
+    Route::put('book/{id}', [BookController::class, 'update'])->name('book.update');
+    Route::delete('book/{id}', [BookController::class, 'destroy'])->name('book.destroy');
+
     Route::post('listing', [ListingController::class, 'store'])->name('listing.store');
     Route::put('listing/{id}', [ListingController::class, 'update']);
     Route::delete('listing/{id}', [ListingController::class, 'destroy']);
