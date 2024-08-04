@@ -21,7 +21,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/books', [BookController::class, 'index']);
+Route::get('/books', [BookController::class, 'index'])->name('books.index');
 Route::get('books/import', [BookController::class, 'import'])->name('books.import');
 
 Route::get('/book/{id}', function ($id) {

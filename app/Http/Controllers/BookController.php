@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\BookResource;
 use App\Models\Book;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
@@ -17,7 +18,7 @@ class BookController extends Controller
      */
     public function index()
     {
-        return Book::all();
+        return BookResource::collection(Book::all());
     }
 
     public function import()
