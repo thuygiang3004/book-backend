@@ -6,7 +6,6 @@ use App\Models\Book;
 use App\Models\Listing;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Arr;
 use PHPUnit\Framework\Attributes\Test;
 use Tests\TestCase;
 
@@ -47,22 +46,28 @@ class ListingControllerTest extends TestCase
     public function it_can_create_a_listing_if_logged_in(): void
     {
         $user = User::factory()->create();
-        $book = Book::factory()->create();
+        $book1 = Book::factory()->create();
+        $book2 = Book::factory()->create();
+
         $postData = [
             'title' => 'my title',
-            'books' => [$book->id],
+            'books' => [$book2->id, $book1->id],
             'price' => 100,
             'status' => 'new',
         ];
         $response = $this->actingAs($user)->postJson(route('listing.store'), $postData);
         $response->assertStatus(201);
 
-        $this->assertDatabaseHas('listings', Arr::except($postData, 'books'));
+        $listing = Listing::query()->first();
+        $this->assertEquals($postData['title'], $listing->title);
+        $this->assertEquals($postData['price'], $listing->price);
+        $this->assertEquals($postData['status'], $listing->status);
 
-        $this->assertDatabaseHas('book_listing', [
-            'book_id' => $book->id,
-            'listing_id' => $response->json('listing.id'),
-        ]);
+        $this->assertEquals($postData['books'][0], $listing->books->first()->id);
+        $this->assertEquals(0, $listing->books->first()->pivot->order);
+
+        $this->assertEquals($postData['books'][1], $listing->books[1]->id);
+        $this->assertEquals(1, $listing->books[1]->pivot->order);
     }
 
     #[Test]
