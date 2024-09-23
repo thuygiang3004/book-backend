@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\DownloadBooksController;
 use App\Http\Controllers\ListingController;
 use App\Http\Controllers\ListingMeilisearchController;
 use App\Http\Controllers\ListingSearchController;
@@ -23,6 +24,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/books', [BookController::class, 'index'])->name('books.index');
 Route::get('books/import', [BookController::class, 'import'])->name('books.import');
+Route::get('books/download', [DownloadBooksController::class, 'index'])->name('downloadBooks');
 
 Route::get('/book/{id}', function ($id) {
     return new BookResource(Book::findOrFail($id));
