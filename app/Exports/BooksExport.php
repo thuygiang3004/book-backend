@@ -8,12 +8,18 @@ use Maatwebsite\Excel\Concerns\WithHeadings;
 
 class BooksExport implements FromCollection, WithHeadings
 {
+    private $columns = [
+        ['field' => 'title', 'name' => 'Title'],
+        ['field' => 'author', 'name' => 'Author'],
+        ['field' => 'publisher', 'name' => 'Publisher']
+    ];
+
     /**
      * @return \Illuminate\Support\Collection
      */
     public function collection()
     {
-        return Book::query()->select('title', 'author', 'publisher')->get();
+        return Book::query()->select(collect($this->columns)->pluck('name')->toArray())->get();
     }
 
 //    public function view(): \Illuminate\Contracts\View\View
@@ -25,6 +31,6 @@ class BooksExport implements FromCollection, WithHeadings
 
     public function headings(): array
     {
-        return ['title', 'author', 'publisher'];
+        return collect($this->columns)->pluck('name')->toArray();
     }
 }
