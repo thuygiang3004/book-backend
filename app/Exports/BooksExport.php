@@ -3,6 +3,8 @@
 namespace App\Exports;
 
 use App\Models\Book;
+use App\Models\BooksExportConfig;
+use Illuminate\Support\Collection;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 
@@ -14,19 +16,18 @@ class BooksExport implements FromCollection, WithHeadings
         ['field' => 'publisher', 'name' => 'Publisher']
     ];
 
-    private $columnsOrder = ['author', 'publisher', 'title'];
-
-    /**
-     * @return \Illuminate\Support\Collection
-     */
-    public function collection()
+    public function collection(): Collection
     {
-        return Book::query()->select($this->columnsOrder)->get();
+        $columnsOrder = BooksExportConfig::query()->first()->config;
+
+        return Book::query()->select($columnsOrder['columnsOrder'])->get();
     }
 
     public function headings(): array
     {
-        $mappedColumns = collect($this->columnsOrder)->map(function ($item) {
+        $columnsOrder = BooksExportConfig::query()->first()->config;
+
+        $mappedColumns = collect($columnsOrder['columnsOrder'])->map(function ($item) {
             return collect($this->columns)->firstWhere('field', $item);
         });
 
