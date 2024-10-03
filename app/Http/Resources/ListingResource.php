@@ -12,7 +12,7 @@ class ListingResource extends JsonResource
      *
      * @return array<string, mixed>
      */
-    public function toArray(Request $request): array
+    public function toArray(Request $request = null): array
     {
         return [
             'id' => $this->id,
@@ -22,8 +22,8 @@ class ListingResource extends JsonResource
             'status' => $this->status,
             'images' => $this->images,
             'comments' => CommentResource::collection($this->comments),
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+            'created_at' => $this->created_at->toISOString(),
+            'updated_at' => $this->updated_at->toISOString(),
         ];
     }
 }

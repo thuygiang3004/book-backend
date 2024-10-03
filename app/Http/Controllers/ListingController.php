@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Events\ListingCreated;
 use App\Filters\ByPrice;
+use App\Filters\ByStatus;
 use App\Filters\ByTitle;
 use App\Http\Resources\ListingResource;
 use App\Models\Listing;
@@ -18,10 +19,12 @@ class ListingController extends Controller
         $pipes = [
             ByTitle::class,
             ByPrice::class,
+            ByStatus::class,
         ];
         $listings = Pipeline::send(Listing::query())
             ->through($pipes)
             ->thenReturn()
+            ->with('books')
             ->paginate(10);
 
         return ListingResource::collection($listings);

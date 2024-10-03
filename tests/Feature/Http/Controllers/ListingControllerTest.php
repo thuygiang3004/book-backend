@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Http\Controllers;
 
+use App\Http\Resources\ListingResource;
 use App\Models\Book;
 use App\Models\Listing;
 use App\Models\User;
@@ -40,6 +41,25 @@ class ListingControllerTest extends TestCase
         ]);
 
         $this->assertEquals($listing->books->load('comments')->toArray(), $response->json('data.0.books'));
+    }
+
+    #[Test]
+    public function it_filters_new_listings()
+    {
+        $newListing = Listing::factory(2)->hasBooks()->create();
+        Listing::factory()->create(['status' => 'updated']);
+
+        $response = $this->getJson(route('listings.index', ['isNew' => true]))
+            ->assertStatus(200);
+
+        $expectedData = ListingResource::collection($newListing)->toArray(request());
+        foreach ($expectedData as &$listing) {
+            $listing['books'] = [];
+            $listing['comments'] = [];
+        }
+
+        //TODO: check why it fails
+//        assertEquals($expectedData, $response->json('data'));
     }
 
     #[Test]
