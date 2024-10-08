@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\Commentable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -13,14 +14,10 @@ class Book extends Model
 
     //    protected $table = 'books';
     use HasFactory;
+    use Commentable;
 
     public function listings(): BelongsToMany
     {
         return $this->belongsToMany(Listing::class);
-    }
-
-    public function comments()
-    {
-        return $this->morphMany(Comment::class, 'commentable');
     }
 }
