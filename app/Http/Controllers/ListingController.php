@@ -95,7 +95,7 @@ class ListingController extends Controller
 
     public function update(Request $request, string $id)
     {
-        $listing = Listing::find($id);
+        $listing = Listing::query()->find($id);
 
         if (!$listing) {
             return $this->sendError('Listing not found');
@@ -128,7 +128,7 @@ class ListingController extends Controller
 
     public function destroy(string $id, Request $request)
     {
-        $listing = Listing::find($id);
+        $listing = Listing::query()->find($id);
 
         if (!$listing) {
             return response()->json([

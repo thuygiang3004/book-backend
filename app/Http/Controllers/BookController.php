@@ -113,7 +113,7 @@ class BookController extends Controller
      */
     public function destroy(string $id)
     {
-        if (Book::where('id', $id)->exists()) {
+        if (Book::query()->where('id', $id)->exists()) {
             $book = Book::find($id);
             $book->delete();
 
@@ -137,14 +137,14 @@ class BookController extends Controller
     public function createBookInDB(mixed $books): void
     {
         foreach (collect($books) as $bookData) {
-            $existingBook = Book::where('title', $bookData['title'])->first();
+            $existingBook = Book::query()->where('title', $bookData['title'])->first();
 
             if ($existingBook) {
                 $existingBook->title = $bookData['title'];
                 $existingBook->author = $bookData['authors'][0]['name'] ?? null;
                 $existingBook->save();
             } else {
-                Book::create([
+                Book::query()->create([
                     'title' => $bookData['title'],
                     'author' => $bookData['authors'][0]['name'] ?? null,
                     'publisher' => 'unknown',

@@ -10,12 +10,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Laravel\Scout\Searchable;
 
-/**
- * @method static findOrFail($id)
- * @method static create(array $input)
- * @method static where(string $string, string $id)
- * @method static find(string $id)
- */
 class Listing extends Model
 {
     use Searchable;
