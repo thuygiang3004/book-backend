@@ -22,9 +22,24 @@ class BookControllerTest extends TestCase
         $this->assertEquals($books->toArray(), $response->json()['data']);
     }
     #[Test]
+    public function it_only_allows_admin_to_store_a_book()
+    {
+        $user = User::factory()->create(['role' => 'user']);
+
+        $book = [
+            'title' => 'Test Book',
+            'author' => 'Test Author',
+            'publisher' => 'Test Publisher',
+        ];
+        $this->actingAs($user)
+            ->postJson(route('books.store', $book))
+            ->assertForbidden();
+    }
+
+    #[Test]
     public function it_stores_a_book()
     {
-        $user = User::factory()->create();
+        $user = User::factory()->create(['role' => 'admin']);
 
         $book = [
             'title' => 'Test Book',
