@@ -91,7 +91,7 @@ class ListingControllerTest extends TestCase
     }
 
     #[Test]
-    public function it_return_unauthorized_errors_when_user_is_not_logged_in(): void
+    public function it_returns_unauthorized_errors_when_user_is_not_logged_in(): void
     {
         $book = Book::factory()->create();
         $postData = [
@@ -102,6 +102,43 @@ class ListingControllerTest extends TestCase
         ];
         $response = $this->postJson(route('listing.store'), $postData);
         $response->assertStatus(401);
+    }
+
+    #[Test]
+    public function it_returns_unauthorized_errors_when_a_user_other_than_listing_owner_is_editing(): void
+    {
+        $listingOwnerUser = User::factory()->create();
+        $anotherUser = User::factory()->create();
+        $listing = Listing::factory()->hasBooks()->for($listingOwnerUser)->create();
+        $postData = [
+            'title' => 'my title',
+            'book_id' => [$listing->books[0]->id],
+            'price' => 100,
+            'status' => 'updated',
+        ];
+        $response = $this->actingAs($anotherUser)->putJson(route('listing.update', $listing), $postData);
+        $response->assertForbidden();
+    }
+
+    #[Test]
+    public function it_updates_the_listing_if_the_owner_is_editing(): void
+    {
+        $listingOwnerUser = User::factory()->create();
+        $listing = Listing::factory()->hasBooks()->for($listingOwnerUser)->create();
+        $postData = [
+            'title' => 'my title',
+            'book_id' => [$listing->books[0]->id],
+            'price' => 100,
+            'status' => 'updated',
+        ];
+        $response = $this->actingAs($listingOwnerUser)->putJson(route('listing.update', $listing), $postData);
+        $response->assertSuccessful();
+
+        $updatedListing = Listing::query()->find($listing->id);
+        $this->assertEquals($postData['title'], $updatedListing->title);
+        $this->assertEquals($postData['book_id'], $updatedListing->books->pluck('id')->toArray());
+        $this->assertEquals($postData['price'], $updatedListing->price);
+        $this->assertEquals($postData['status'], $updatedListing->status);
     }
 
     #[Test]

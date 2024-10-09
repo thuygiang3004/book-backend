@@ -101,9 +101,8 @@ class ListingController extends Controller
             return $this->sendError('Listing not found');
         }
 
-        if (!$request->user()->is($listing->user)) {
-            return $this->sendError('Unauthorized');
-        }
+
+        $this->authorize('update', $listing);
 
         $input = $request->all();
         $validator = Validator::make($input, [

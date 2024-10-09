@@ -46,7 +46,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::delete('book/{id}', [BookController::class, 'destroy'])->name('book.destroy');
 
     Route::post('listing', [ListingController::class, 'store'])->name('listing.store');
-    Route::put('listing/{id}', [ListingController::class, 'update']);
+    Route::put('listing/{id}', [ListingController::class, 'update'])->name('listing.update');
     Route::delete('listing/{id}', [ListingController::class, 'destroy']);
 
     Route::resource('comment', CommentController::class)->only(['store', 'destroy']);

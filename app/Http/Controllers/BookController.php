@@ -42,6 +42,7 @@ class BookController extends Controller
      */
     public function store(Request $request)
     {
+        $this->authorize('edit-book');
         $input = $request->all();
         $validator = Validator::make($input, [
             'title' => 'required',
