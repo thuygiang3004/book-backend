@@ -63,4 +63,11 @@ class BookControllerTest extends TestCase
 
         $this->assertDatabaseHas('books', $book);
     }
+
+    public function test_dispatch_event()
+    {
+        $book = Book::factory()->create(['publisher' => 'Test Publisher']);
+
+        $this->assertEquals('Giang', $book->publisher);
+    }
 }

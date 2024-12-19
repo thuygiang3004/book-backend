@@ -13,9 +13,6 @@ use Illuminate\Support\Facades\Validator;
  */
 class BookController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
         return BookResource::collection(Book::all());

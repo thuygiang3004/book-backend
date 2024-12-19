@@ -16,6 +16,14 @@ class Book extends Model
     use HasFactory;
     use Commentable;
 
+    protected static function booted(): void
+    {
+        static::saving(function (Book $book) {
+            $book->publisher = 'Giang';
+        });
+    }
+
+
     public function listings(): BelongsToMany
     {
         return $this->belongsToMany(Listing::class);
