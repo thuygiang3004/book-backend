@@ -18,6 +18,7 @@ class BookController extends Controller
      */
     public function index()
     {
+        dump('test');
         return BookResource::collection(Book::all());
     }
 
