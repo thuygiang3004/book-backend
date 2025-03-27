@@ -16,6 +16,7 @@ class ListingController extends Controller
 {
     public function index()
     {
+        dump('tests');
         $pipes = [
             ByTitle::class,
             ByPrice::class,
